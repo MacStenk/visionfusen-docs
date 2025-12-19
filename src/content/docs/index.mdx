@@ -1,0 +1,42 @@
+---
+title: VisionFusen Dokumentation
+description: Kryptografische Urheberschaftsnachweise für Bilder mit NIP-94 auf Nostr
+template: splash
+hero:
+  title: VisionFusen Docs
+  tagline: Kryptografische Urheberschaftsnachweise für deine Bilder
+  actions:
+    - text: Schnellstart
+      link: /guides/quickstart/
+      variant: primary
+    - text: Konzepte
+      link: /concepts/overview/
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Was ist VisionFusen?
+
+VisionFusen signiert deine Bilder kryptografisch auf dem **Nostr-Protokoll**. Das Ergebnis ist ein unveränderlicher, dezentraler Nachweis der Urheberschaft.
+
+<CardGrid stagger>
+  <Card title="Bild signieren" icon="pencil">
+    Signiere dein Bild mit NIP-94 und veröffentliche es auf Nostr.
+  </Card>
+  <Card title="Signatur prüfen" icon="approve-check">
+    Verifiziere ob ein Bild bereits signiert wurde.
+  </Card>
+  <Card title="API nutzen" icon="setting">
+    Integriere VisionFusen in deine eigenen Workflows.
+  </Card>
+  <Card title="Konzepte verstehen" icon="open-book">
+    Lerne wie NIP-94, Hashes und Signaturen funktionieren.
+  </Card>
+</CardGrid>
+
+## Features
+
+- **NIP-94 Signierung** - Standardkonform nach Nostr Improvement Proposal 94
+- **CDN Upload** - Bilder werden auf cdn.visionfusen.org gehostet
+- **Multi-Relay** - Events auf 4 Relays (damus, primal, nos.lol, visionfusen)
+- **LLM-optimiert** - Statische HTML-Seiten mit Schema.org für AI-Sichtbarkeit

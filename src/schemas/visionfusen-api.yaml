@@ -1,0 +1,195 @@
+openapi: 3.1.0
+info:
+  title: VisionFusen API
+  version: 2.0.0
+  description: |
+    Kryptografische Urheberschaftsnachweise für Bilder mit NIP-94 auf Nostr.
+    
+    ## Funktionsweise
+    
+    1. **Bild hochladen** - Als Datei oder URL
+    2. **Metadaten auslesen** - XMP-Daten werden extrahiert (Autor ist Pflicht)
+    3. **Hash berechnen** - SHA-256 für eindeutige Identifikation
+    4. **NIP-94 Event erstellen** - Nostr-Event mit allen Metadaten
+    5. **Signieren & Publishen** - Auf Nostr Relays veröffentlichen
+  contact:
+    name: VisionFusen
+    url: https://visionfusen.org
+
+servers:
+  - url: https://visionfusen.org/api
+    description: Production
+
+tags:
+  - name: Signing
+    description: Bild signieren
+  - name: Verification
+    description: Signaturen prüfen
+  - name: Badge
+    description: Verifizierungs-Badges
+
+paths:
+  /sign-image-v2:
+    post:
+      operationId: signImage
+      summary: Bild signieren
+      description: |
+        Signiert ein Bild mit NIP-94 und veröffentlicht es auf Nostr Relays.
+        
+        Das Bild **muss** einen gültigen Autor in den XMP-Metadaten haben.
+      tags:
+        - Signing
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Bild-Datei (WebP, PNG, JPEG, GIF)
+                url:
+                  type: string
+                  format: uri
+                  description: Alternative - Bild-URL statt Datei
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_base64:
+                  type: string
+                  description: Bild als Base64-String
+                image_url:
+                  type: string
+                  format: uri
+                  description: Öffentlich erreichbare Bild-URL
+      responses:
+        '200':
+          description: Bild erfolgreich signiert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  hash:
+                    type: string
+                    description: SHA-256 Hash
+                  metadata:
+                    type: object
+                    properties:
+                      author:
+                        type: string
+                      title:
+                        type: string
+                  event:
+                    type: object
+                    description: NIP-94 Event (Kind 1063)
+                  published_to:
+                    type: array
+                    items:
+                      type: string
+                  urls:
+                    type: object
+                    properties:
+                      image:
+                        type: string
+                      verify:
+                        type: string
+        '400':
+          description: Ungültige Anfrage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Bild bereits signiert
+
+  /verify:
+    get:
+      operationId: verifySignature
+      summary: Signatur verifizieren
+      description: Prüft ob ein Bild auf Nostr signiert wurde.
+      tags:
+        - Verification
+      parameters:
+        - name: hash
+          in: query
+          description: SHA-256 Hash des Bildes
+          schema:
+            type: string
+        - name: url
+          in: query
+          description: Bild-URL (Hash wird berechnet)
+          schema:
+            type: string
+            format: uri
+      responses:
+        '200':
+          description: Verifizierungsergebnis
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verified:
+                    type: boolean
+                  hash:
+                    type: string
+                  event:
+                    type: object
+                  metadata:
+                    type: object
+                  relays_found:
+                    type: array
+                    items:
+                      type: string
+
+  /badge:
+    get:
+      operationId: getBadge
+      summary: Verifizierungs-Badge
+      description: Generiert ein SVG-Badge für verifizierte Bilder.
+      tags:
+        - Badge
+      parameters:
+        - name: hash
+          in: query
+          schema:
+            type: string
+        - name: event
+          in: query
+          schema:
+            type: string
+        - name: url
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SVG Badge
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          enum:
+            - NO_IMAGE
+            - AUTHOR_REQUIRED
+            - FILE_TOO_LARGE
+            - INVALID_FORMAT
+            - ALREADY_SIGNED
+        message:
+          type: string
+        hint:
+          type: string
