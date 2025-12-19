@@ -1,10 +1,10 @@
 ---
 title: VisionFusen Dokumentation
-description: Medien-Pipeline für das neue Internet. Content signieren, optimieren, distribuieren.
+description: Medien-Pipeline für das neue Internet. Dateien signieren, optimieren, distribuieren.
 template: splash
 hero:
   title: VisionFusen Docs
-  tagline: Medien-Pipeline für das neue Internet
+  tagline: Universal Content Signing für das neue Internet
   actions:
     - text: Schnellstart
       link: /guides/quickstart/
@@ -22,8 +22,8 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 Die Brücke zwischen Web2-Publishing und Web3-Ownership. Deine Inhalte werden kryptografisch signiert, für LLMs optimiert und dezentral verteilt.
 
 <CardGrid>
-  <Card title="Content signieren" icon="pencil">
-    NIP-94 für Bilder, NIP-23 für Texte. Unveränderlicher Nachweis der Urheberschaft auf Nostr.
+  <Card title="Universal Signing" icon="pencil">
+    Bilder, PDFs, Markdown, Text — alles was einen Hash hat, kann signiert werden. Unveränderlicher Nachweis der Urheberschaft auf Nostr.
   </Card>
   <Card title="LLM-optimiert" icon="open-book">
     Schema.org, JSON-LD, llms.txt — deine Seiten tauchen als Quelle in KI-Antworten auf.
@@ -36,12 +36,20 @@ Die Brücke zwischen Web2-Publishing und Web3-Ownership. Deine Inhalte werden kr
   </Card>
 </CardGrid>
 
+## Unterstützte Formate
+
+| Typ | Formate | Metadaten-Quelle |
+|-----|---------|------------------|
+| **Bilder** | WebP, PNG, JPEG, GIF | XMP/EXIF |
+| **Dokumente** | PDF | PDF-Info Dictionary |
+| **Text** | Markdown (.md), Plain Text (.txt) | YAML Frontmatter |
+
 ## Die Pipeline
 
 ```
-Content → Optimierung → Metadaten → Signatur → Distribution
-           WebP/AVIF    Schema.org   NIP-94     Relays + Web
-           Struktur     JSON-LD      NIP-23     Edge-delivered
+Datei → Typ erkennen → Metadaten → Signatur → Distribution
+         MIME-Type     XMP/PDF/     NIP-94    Relays + CDN
+                       Frontmatter            + Static HTML
 ```
 
 ## Status
@@ -49,8 +57,9 @@ Content → Optimierung → Metadaten → Signatur → Distribution
 | Component | Status |
 |-----------|--------|
 | **Infrastruktur** | ✅ Live — Relay, nsecBunker, LNbits, NIP-05 |
-| **Sign Tool** | ✅ Live — NIP-94 Bild-Signierung |
-| **Content API** | 🔨 Building — Optimize, Schema, LLMO Scoring |
+| **Universal Sign Tool** | ✅ Live — Bilder, PDF, Markdown, Text |
+| **Static Event Pages** | ✅ Live — LLM-optimierte HTML auf CDN |
+| **Content API v2.1** | ✅ Live — Universal Signing |
 | **Lightning** | 🔨 Building — L402, Token System |
-| **Text Pipeline** | 📋 Planned — NIP-23, Markdown→Nostr |
+| **Private Signing** | 📋 Planned — Nur Hash, ZIP-Beweis |
 | **Agent API** | 📋 Planned — Machine-to-Machine |
