@@ -1,42 +1,56 @@
 ---
 title: VisionFusen Dokumentation
-description: Kryptografische Urheberschaftsnachweise für Bilder mit NIP-94 auf Nostr
+description: Medien-Pipeline für das neue Internet. Content signieren, optimieren, distribuieren.
 template: splash
 hero:
   title: VisionFusen Docs
-  tagline: Kryptografische Urheberschaftsnachweise für deine Bilder
+  tagline: Medien-Pipeline für das neue Internet
   actions:
     - text: Schnellstart
       link: /guides/quickstart/
       variant: primary
-    - text: Konzepte
-      link: /concepts/overview/
+    - text: API Reference
+      link: /api/
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Was ist VisionFusen?
 
-VisionFusen signiert deine Bilder kryptografisch auf dem **Nostr-Protokoll**. Das Ergebnis ist ein unveränderlicher, dezentraler Nachweis der Urheberschaft.
+**Normaler Web-Content rein. Signierter, indexer-ready Output raus.**
 
-<CardGrid stagger>
-  <Card title="Bild signieren" icon="pencil">
-    Signiere dein Bild mit NIP-94 und veröffentliche es auf Nostr.
+Die Brücke zwischen Web2-Publishing und Web3-Ownership. Deine Inhalte werden kryptografisch signiert, für LLMs optimiert und dezentral verteilt.
+
+<CardGrid>
+  <Card title="Content signieren" icon="pencil">
+    NIP-94 für Bilder, NIP-23 für Texte. Unveränderlicher Nachweis der Urheberschaft auf Nostr.
   </Card>
-  <Card title="Signatur prüfen" icon="approve-check">
-    Verifiziere ob ein Bild bereits signiert wurde.
+  <Card title="LLM-optimiert" icon="open-book">
+    Schema.org, JSON-LD, llms.txt — deine Seiten tauchen als Quelle in KI-Antworten auf.
   </Card>
-  <Card title="API nutzen" icon="setting">
-    Integriere VisionFusen in deine eigenen Workflows.
+  <Card title="Multi-Distribution" icon="rocket">
+    Ein Content, mehrere Kanäle: Nostr Relays + klassisches Web. Edge-delivered.
   </Card>
-  <Card title="Konzepte verstehen" icon="open-book">
-    Lerne wie NIP-94, Hashes und Signaturen funktionieren.
+  <Card title="Monetarisierung" icon="seti:bitcoin">
+    Drei Layer: Web Paywall (LNbits), Value-for-Value (Zaps), L402 API (Agent-to-Agent).
   </Card>
 </CardGrid>
 
-## Features
+## Die Pipeline
 
-- **NIP-94 Signierung** - Standardkonform nach Nostr Improvement Proposal 94
-- **CDN Upload** - Bilder werden auf cdn.visionfusen.org gehostet
-- **Multi-Relay** - Events auf 4 Relays (damus, primal, nos.lol, visionfusen)
-- **LLM-optimiert** - Statische HTML-Seiten mit Schema.org für AI-Sichtbarkeit
+```
+Content → Optimierung → Metadaten → Signatur → Distribution
+           WebP/AVIF    Schema.org   NIP-94     Relays + Web
+           Struktur     JSON-LD      NIP-23     Edge-delivered
+```
+
+## Status
+
+| Component | Status |
+|-----------|--------|
+| **Infrastruktur** | ✅ Live — Relay, nsecBunker, LNbits, NIP-05 |
+| **Sign Tool** | ✅ Live — NIP-94 Bild-Signierung |
+| **Content API** | 🔨 Building — Optimize, Schema, LLMO Scoring |
+| **Lightning** | 🔨 Building — L402, Token System |
+| **Text Pipeline** | 📋 Planned — NIP-23, Markdown→Nostr |
+| **Agent API** | 📋 Planned — Machine-to-Machine |
