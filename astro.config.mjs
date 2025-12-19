@@ -9,7 +9,8 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'VisionFusen Docs',
-			description: 'Kryptografische Urheberschaftsnachweise für Bilder mit NIP-94 auf Nostr',
+			description: 'Universal Content Signing mit NIP-94 auf Nostr',
+			lastUpdated: true,
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/visionfusen' },
 			],
