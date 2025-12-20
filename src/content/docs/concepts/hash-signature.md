@@ -3,8 +3,6 @@ title: Hash & Signatur
 description: Kryptografische Grundlagen von VisionFusen
 ---
 
-# Hash & Signatur
-
 VisionFusen nutzt zwei kryptografische Konzepte.
 
 ## SHA-256 Hash

@@ -54,6 +54,13 @@ export default defineConfig({
 						{ label: 'Bild signieren', slug: 'guides/sign-image' },
 						{ label: 'Signatur verifizieren', slug: 'guides/verify-signature' },
 						{ label: 'Badge einbinden', slug: 'guides/embed-badge' },
+						{ label: 'Auto-Sign Script', slug: 'guides/auto-sign' },
+					],
+				},
+				{
+					label: 'Referenz',
+					items: [
+						{ label: 'VF-1064 Spec', slug: 'reference/vf-1064' },
 					],
 				},
 				...openAPISidebarGroups,

@@ -3,8 +3,6 @@ title: Einführung
 description: Was ist VisionFusen und warum brauchst du es?
 ---
 
-# Willkommen bei VisionFusen
-
 **Medien-Pipeline für das neue Internet.**
 
 Normaler Web-Content rein. Signierter, indexer-ready Output raus. Die Brücke zwischen Web2-Publishing und Web3-Ownership.

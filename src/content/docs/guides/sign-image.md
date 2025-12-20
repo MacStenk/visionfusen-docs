@@ -3,8 +3,6 @@ title: Bild signieren
 description: Verschiedene Wege zum Signieren deiner Bilder
 ---
 
-# Bild signieren
-
 Es gibt mehrere Wege, dein Bild mit VisionFusen zu signieren.
 
 ## Web-Interface

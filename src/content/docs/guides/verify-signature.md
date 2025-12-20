@@ -3,8 +3,6 @@ title: Signatur verifizieren
 description: Wie du prüfst ob ein Bild signiert wurde
 ---
 
-# Signatur verifizieren
-
 Jeder kann prüfen, ob ein Bild auf Nostr signiert wurde.
 
 ## Web-Interface

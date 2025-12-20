@@ -3,8 +3,6 @@ title: XMP Metadaten
 description: Welche Metadaten werden von VisionFusen unterstützt?
 ---
 
-# XMP Metadaten
-
 **XMP** (Extensible Metadata Platform) ist ein Standard zum Einbetten von Metadaten in Dateien.
 
 ## Pflichtfeld

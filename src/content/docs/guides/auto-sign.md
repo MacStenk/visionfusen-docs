@@ -3,8 +3,6 @@ title: "Auto-Sign Script"
 description: "Automatisch alle Webseiten nach dem Build signieren"
 ---
 
-# Auto-Sign Script
-
 Das Auto-Sign Script signiert automatisch alle HTML-Seiten nach dem Astro-Build mit VF-1064.
 
 ## Schnellstart

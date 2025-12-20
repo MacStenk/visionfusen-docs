@@ -3,8 +3,6 @@ title: Konzepte
 description: Grundlegende Konzepte hinter VisionFusen
 ---
 
-# Konzepte
-
 Verstehe die Bausteine, auf denen VisionFusen aufbaut.
 
 ## Das große Bild

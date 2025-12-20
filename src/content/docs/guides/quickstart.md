@@ -3,8 +3,6 @@ title: Schnellstart
 description: In 5 Minuten deine erste Datei signieren
 ---
 
-# Schnellstart
-
 Signiere deine erste Datei in unter 5 Minuten.
 
 ## Unterstützte Formate

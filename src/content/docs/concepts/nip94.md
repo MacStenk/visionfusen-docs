@@ -3,8 +3,6 @@ title: NIP-94 erklärt
 description: Was ist NIP-94 und wie funktioniert es?
 ---
 
-# NIP-94: File Metadata
-
 **NIP-94** ist ein Nostr Improvement Proposal für Datei-Metadaten.
 
 ## Event Struktur

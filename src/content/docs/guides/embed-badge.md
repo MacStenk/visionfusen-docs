@@ -3,8 +3,6 @@ title: Badge einbinden
 description: Zeige die Verifizierung auf deiner Website
 ---
 
-# Badge einbinden
-
 Zeige Besuchern, dass dein Bild verifiziert ist.
 
 ## Dynamisches Badge
