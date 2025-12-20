@@ -23,6 +23,7 @@ config();
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join, relative } from 'path';
 import { createHash } from 'crypto';
+import * as cheerio from 'cheerio';
 
 // ============================================
 // KONFIGURATION
@@ -80,30 +81,54 @@ function normalizeContent(html) {
 }
 
 /**
- * Main-Content aus HTML extrahieren
+ * Main-Content aus HTML extrahieren (mit cheerio)
  */
 function extractMainContent(html) {
-  const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
-  if (mainMatch) return mainMatch[1];
+  const $ = cheerio.load(html);
   
-  const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
-  if (articleMatch) return articleMatch[1];
+  // Priorität: main > article > body
+  let content = $('main').html();
+  if (!content) content = $('article').html();
+  if (!content) content = $('body').html();
   
-  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-  if (bodyMatch) return bodyMatch[1];
-  
-  return html;
+  return content || html;
 }
 
 /**
- * Titel aus HTML extrahieren
+ * Titel aus HTML extrahieren (mit cheerio)
  */
 function extractTitle(html) {
-  const match = html.match(/<title[^>]*>([^<]*)<\/title>/i);
-  if (match) {
-    return match[1].split('|')[0].trim();
-  }
-  return '';
+  const $ = cheerio.load(html);
+  const title = $('title').text();
+  return title ? title.split('|')[0].trim() : '';
+}
+
+/**
+ * Meta-Tags in HTML injizieren (mit cheerio - robust!)
+ */
+function injectMetaTags(html, eventData) {
+  const $ = cheerio.load(html);
+  
+  // Alte VisionFusen Meta-Tags entfernen (falls vorhanden)
+  $('meta[name^="nostr:"]').remove();
+  $('link[rel="nostr-verification"]').remove();
+  $('head').find('*').filter(function() {
+    return $(this).text().includes('VisionFusen Signature');
+  }).prev('comment').remove();
+  
+  // Neue Meta-Tags am Ende von <head> einfügen
+  const metaTags = `
+    <!-- VisionFusen Signature (VF-1064) -->
+    <meta name="nostr:event" content="${eventData.id}">
+    <meta name="nostr:pubkey" content="${eventData.pubkey}">
+    <meta name="nostr:hash" content="${eventData.hash}">
+    <meta name="nostr:signed" content="${eventData.signedAt}">
+    <link rel="nostr-verification" href="https://visionfusen.org/verify/${eventData.id}">
+  `;
+  
+  $('head').append(metaTags);
+  
+  return $.html();
 }
 
 /**
@@ -170,22 +195,6 @@ function saveCache(cacheFile, cache) {
   writeFileSync(cacheFile, JSON.stringify(cache, null, 2));
 }
 
-/**
- * Meta-Tags in HTML injizieren
- */
-function injectMetaTags(html, eventData) {
-  const metaTags = `
-    <!-- VisionFusen Signature (VF-1064) -->
-    <meta name="nostr:event" content="${eventData.id}" />
-    <meta name="nostr:pubkey" content="${eventData.pubkey}" />
-    <meta name="nostr:hash" content="${eventData.hash}" />
-    <meta name="nostr:signed" content="${eventData.signedAt}" />
-    <link rel="nostr-verification" href="https://visionfusen.org/verify/${eventData.id}" />
-  `;
-  
-  return html.replace('</head>', metaTags + '\n</head>');
-}
-
 // ============================================
 // BUNKER API
 // ============================================
@@ -216,7 +225,7 @@ async function checkBunkerStatus() {
  */
 async function signWithBunker(event) {
   if (!CONFIG.bunker.token) {
-    throw new Error('BUNKER_TOKEN nicht gesetzt');
+    throw new Error('BUNKER_API_TOKEN nicht gesetzt');
   }
   
   try {
@@ -254,14 +263,70 @@ async function signWithBunker(event) {
   }
 }
 
+// ============================================
+// RELAY PUBLISHING
+// ============================================
+
 /**
- * Event auf Relay publishen (via WebSocket)
+ * Event auf Relay publishen
  */
 async function publishToRelay(event, relayUrl) {
-  // Für jetzt: Nur loggen, später WebSocket implementieren
-  // TODO: nostr-tools oder eigene WebSocket Implementierung
-  console.log(`  📡 Publish zu ${relayUrl} (noch nicht implementiert)`);
-  return true;
+  // Nutze native WebSocket (Node.js 22+) oder ws package
+  const WebSocketImpl = globalThis.WebSocket || (await import('ws')).default;
+  
+  return new Promise((resolve, reject) => {
+    let ws;
+    let timeout;
+    
+    try {
+      ws = new WebSocketImpl(relayUrl);
+    } catch (e) {
+      reject(new Error(`WebSocket Fehler: ${e.message}`));
+      return;
+    }
+    
+    timeout = setTimeout(() => {
+      if (ws) ws.close();
+      reject(new Error('Timeout beim Relay-Publishing'));
+    }, 10000);
+    
+    ws.onopen = () => {
+      // EVENT message senden: ["EVENT", event]
+      const message = JSON.stringify(['EVENT', event]);
+      ws.send(message);
+    };
+    
+    ws.onmessage = (msg) => {
+      try {
+        const data = typeof msg.data === 'string' ? msg.data : msg.data.toString();
+        const response = JSON.parse(data);
+        
+        // OK response: ["OK", event_id, success, message]
+        if (response[0] === 'OK') {
+          clearTimeout(timeout);
+          ws.close();
+          
+          if (response[2] === true) {
+            resolve({ success: true, eventId: response[1] });
+          } else {
+            reject(new Error(response[3] || 'Relay rejected event'));
+          }
+        }
+      } catch (e) {
+        // Ignoriere Parse-Fehler
+      }
+    };
+    
+    ws.onerror = (error) => {
+      clearTimeout(timeout);
+      if (ws) ws.close();
+      reject(new Error(`WebSocket Fehler: ${error.message || 'Unknown'}`));
+    };
+    
+    ws.onclose = () => {
+      clearTimeout(timeout);
+    };
+  });
 }
 
 // ============================================
@@ -274,15 +339,16 @@ async function signPages() {
   console.log(`   Base:    ${CONFIG.baseUrl}`);
   console.log(`   Bunker:  ${CONFIG.bunker.url}`);
   console.log(`   Key:     ${CONFIG.bunker.keyName}`);
+  console.log(`   Relay:   ${CONFIG.relay}`);
   console.log(`   Kind:    ${CONFIG.eventKind}`);
   console.log(`   Dry Run: ${CONFIG.dryRun}\n`);
   
   // Bunker-Verbindung prüfen (nicht bei dry-run)
   if (!CONFIG.dryRun) {
     if (!CONFIG.bunker.token) {
-      console.log('❌ BUNKER_TOKEN nicht gesetzt!\n');
+      console.log('❌ BUNKER_API_TOKEN nicht gesetzt!\n');
       console.log('   Setze die Umgebungsvariable:');
-      console.log('   export BUNKER_TOKEN="dein-api-token"\n');
+      console.log('   export BUNKER_API_TOKEN="dein-api-token"\n');
       process.exit(1);
     }
     
@@ -307,6 +373,7 @@ async function signPages() {
   let signed = 0;
   let skipped = 0;
   let errors = 0;
+  let published = 0;
   
   const results = [];
   
@@ -379,10 +446,18 @@ async function signPages() {
       // Signieren via Bunker API
       const signedEvent = await signWithBunker(event);
       
-      // Publishen (TODO)
-      await publishToRelay(signedEvent, CONFIG.relay);
+      console.log(`   ✅ Signiert: ${signedEvent.id.slice(0, 8)}...`);
       
-      // Meta-Tags injizieren
+      // Auf Relay publishen
+      try {
+        await publishToRelay(signedEvent, CONFIG.relay);
+        console.log(`   📡 Published zu ${CONFIG.relay}`);
+        published++;
+      } catch (relayError) {
+        console.log(`   ⚠️  Relay-Fehler: ${relayError.message}`);
+      }
+      
+      // Meta-Tags injizieren (mit cheerio - robust!)
       const updatedHtml = injectMetaTags(html, {
         id: signedEvent.id,
         pubkey: signedEvent.pubkey,
@@ -396,7 +471,6 @@ async function signPages() {
       // Cache updaten
       cache[url] = hash;
       
-      console.log(`   ✅ Signiert: ${signedEvent.id.slice(0, 8)}...`);
       console.log(`   Pubkey: ${signedEvent.pubkey.slice(0, 8)}...\n`);
       signed++;
       
@@ -414,6 +488,7 @@ async function signPages() {
   // Zusammenfassung
   console.log('\n═══════════════════════════════════════');
   console.log(`✅ Signiert:     ${signed}`);
+  console.log(`📡 Published:    ${published}`);
   console.log(`⏭️  Unverändert:  ${skipped}`);
   console.log(`❌ Fehler:       ${errors}`);
   console.log('═══════════════════════════════════════\n');
