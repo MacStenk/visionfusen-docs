@@ -1,0 +1,22 @@
+{
+  "https://docs.visionfusen.org/404": "d1e155346f21d9d01056c0ddd84c2747e9b3f56caf68b186fe9d6f3d806112b0",
+  "https://docs.visionfusen.org/api/": "60ed53b7f333ddb4e6a11f204c42c1cd22ec0f70f5893331203c879ba77ec611",
+  "https://docs.visionfusen.org/api/operations/getbadge/": "31b7604e57a82fb8f8f78272beb222e841304aa621fb0eb7cf9787bdba695a42",
+  "https://docs.visionfusen.org/api/operations/signfile/": "1fe097aaa9bf69b66741915543d36ed1d42c7e16951b7a03cf0cbbb58e406eaf",
+  "https://docs.visionfusen.org/api/operations/tags/badge/": "f3d3ca534dec5a782728de7686e44f34ddcca30f26ae11d1c2e198ac32b1cfc6",
+  "https://docs.visionfusen.org/api/operations/tags/signing/": "83e0ba7f6ca5d76112b1d7813ad1844f58732e492428e2a81b00f80f34030198",
+  "https://docs.visionfusen.org/api/operations/tags/verification/": "30b20b3983955b478ee50e89bfec02652b1689f4d0ed57c19972cc22ac970282",
+  "https://docs.visionfusen.org/api/operations/verifysignature/": "6ce4b1e0f1c08eefab7b2c81c2f9f8fcaa0ac8be85077c69f13de4dbae8bece4",
+  "https://docs.visionfusen.org/concepts/hash-signature/": "a8d691e9c8ab3b4f8cd2f8e33864c6b9cf57c465a4311096c1ed6eec5fd9c64b",
+  "https://docs.visionfusen.org/concepts/nip94/": "84339190ce64462d39c931b8c4bf77db5adebb98c5bc5bfb8efed7451c6d2a19",
+  "https://docs.visionfusen.org/concepts/overview/": "c7fc16b3234407c30643fe0ddeabe0a358fe76b771ec24e9dcd4ca58a72b2ce5",
+  "https://docs.visionfusen.org/concepts/xmp-metadata/": "242fd864aab919c6258c35b5db85ebf1a3e9e58d4c3e513537b4f46567a72b98",
+  "https://docs.visionfusen.org/guides/embed-badge/": "2f66afd8432a554542a3f5747c82eb5928dc4283256c8e2ca97e58a0399a3de7",
+  "https://docs.visionfusen.org/guides/example/": "9d8e74bd07222edd6b7f0afb9b7c575ee95c65155f2d2e71904496440def9e72",
+  "https://docs.visionfusen.org/guides/introduction/": "f60812843011a5e308795a64b64502d0e87b1fa2604483244d5292ba7002cf4c",
+  "https://docs.visionfusen.org/guides/quickstart/": "ebe0d88c6bbe33aca94a89668e586f34d37212c2dbc824eacec24573e6eff67b",
+  "https://docs.visionfusen.org/guides/sign-image/": "8ac7ca1e2bd7df756a98c2df3d6575e13e0910257bf63cab1d0f38ccc099fedd",
+  "https://docs.visionfusen.org/guides/verify-signature/": "d8baf67a1d9627c7df68042bf67b378a00d4514361bd1524b858deaa729c0839",
+  "https://docs.visionfusen.org/": "131b4ffda33d29d3cdf2b7effec5526deed8ebf20b3610e31a7054aee67fccba",
+  "https://docs.visionfusen.org/reference/example/": "c2da738c5bc83016a5e0916fbafaa28fb04fb420c7e866f8b89b99b5525f0bd0"
+}
