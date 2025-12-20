@@ -1,0 +1,24 @@
+---
+/**
+ * Custom Head Component für VisionFusen Docs
+ * Erweitert den Standard-Head um Schema.org JSON-LD
+ */
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Head.astro';
+import SchemaOrg from './SchemaOrg.astro';
+
+// Alle Props durchreichen
+const props = Astro.props;
+
+// Extrahiere was wir brauchen - defensiv
+const title = props?.entry?.data?.title || 'VisionFusen Docs';
+const description = props?.entry?.data?.description;
+const slug = props?.entry?.id?.replace(/\/index$/, '').replace(/\.mdx?$/, '') || '';
+---
+
+<Default {...props} />
+<SchemaOrg 
+  title={title} 
+  description={description} 
+  slug={slug}
+/>

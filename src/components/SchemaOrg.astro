@@ -1,0 +1,155 @@
+---
+/**
+ * Schema.org JSON-LD Component für VisionFusen Docs
+ * Injiziert strukturierte Daten für LLM-Optimierung
+ */
+
+interface Props {
+  title: string;
+  description?: string;
+  slug?: string;
+  dateModified?: Date;
+}
+
+const { title, description, slug = '', dateModified } = Astro.props;
+
+const baseUrl = 'https://docs.visionfusen.org';
+const canonicalUrl = `${baseUrl}${slug ? `/${slug}/` : '/'}`;
+const dateStr = dateModified?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    // Person (Zentrum)
+    {
+      "@type": "Person",
+      "@id": "https://stevennoack.de/#person",
+      "name": "Steven Noack",
+      "url": "https://stevennoack.de",
+      "jobTitle": "System Architect",
+      "description": "System Builder für digitale Souveränität und LLM-optimierte Infrastrukturen.",
+      "sameAs": [
+        "https://github.com/MacStenk",
+        "https://garten.stevennoack.de",
+        "https://x.com/stevennoack_de"
+      ]
+    },
+    
+    // VisionFusen (Software/Plattform)
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://visionfusen.org/#software",
+      "name": "VisionFusen",
+      "url": "https://visionfusen.org",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Identity Infrastructure",
+      "operatingSystem": "Web",
+      "softwareVersion": "Beta",
+      "description": "Identitätsinfrastruktur für das neue Internet. Signiert · Sichtbar · Souverän. Eigene Schlüssel. Eigene Identität. Eigene Sichtbarkeit.",
+      "slogan": "Signiert · Sichtbar · Souverän",
+      "creator": {
+        "@id": "https://stevennoack.de/#person"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR",
+        "description": "Free Tier verfügbar"
+      },
+      "featureList": [
+        "NIP-94 Image Signing",
+        "VF-1064 Web Page Signing",
+        "PDF Signing",
+        "Markdown Signing",
+        "Nostr Relay Infrastructure",
+        "nsecBunker Key Management",
+        "LLM-optimierte Event Pages",
+        "Multi-Relay Distribution",
+        "Lightning Monetarisierung"
+      ],
+      "softwareHelp": {
+        "@id": `${baseUrl}/#website`
+      },
+      "sameAs": [
+        "https://github.com/visionfusen",
+        "https://github.com/MacStenk",
+        "https://docs.visionfusen.org"
+      ]
+    },
+    
+    // CodeBack (verwandtes Projekt)
+    {
+      "@type": "WebApplication",
+      "@id": "https://codeback.de/#software",
+      "name": "CodeBack.de",
+      "url": "https://codeback.de",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "LLM Tools",
+      "description": "LLM-Tools für Coaches und Consultants. LLM-Readability Checker, Metadaten-Editor, Image Optimizer.",
+      "creator": {
+        "@id": "https://stevennoack.de/#person"
+      },
+      "featureList": [
+        "LLM-Readability Checker",
+        "Image Optimizer mit XMP-Metadaten",
+        "Schema.org Generator"
+      ]
+    },
+    
+    // WebSite (Docs)
+    {
+      "@type": "WebSite",
+      "@id": `${baseUrl}/#website`,
+      "name": "VisionFusen Documentation",
+      "alternateName": "VisionFusen Docs",
+      "url": baseUrl,
+      "description": "Offizielle Dokumentation für VisionFusen - Identitätsinfrastruktur für das neue Internet",
+      "inLanguage": "de",
+      "publisher": {
+        "@id": "https://stevennoack.de/#person"
+      },
+      "about": {
+        "@id": "https://visionfusen.org/#software"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${baseUrl}/?search={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    
+    // TechArticle (aktuelle Seite)
+    {
+      "@type": "TechArticle",
+      "@id": `${canonicalUrl}#article`,
+      "headline": title,
+      "description": description || `${title} - VisionFusen Dokumentation`,
+      "url": canonicalUrl,
+      "inLanguage": "de",
+      "isPartOf": {
+        "@id": `${baseUrl}/#website`
+      },
+      "about": {
+        "@id": "https://visionfusen.org/#software"
+      },
+      "author": {
+        "@id": "https://stevennoack.de/#person"
+      },
+      "publisher": {
+        "@id": "https://stevennoack.de/#person"
+      },
+      "datePublished": "2024-12-01",
+      "dateModified": dateStr,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": canonicalUrl
+      }
+    }
+  ]
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

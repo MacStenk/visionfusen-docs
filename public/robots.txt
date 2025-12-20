@@ -1,0 +1,128 @@
+# robots.txt for docs.visionfusen.org
+# Last Updated: 2025-12-20
+
+# ===========================================
+# LLM & AI CRAWLER INFORMATION
+# ===========================================
+# Machine-readable documentation available at:
+# /llms.txt - Index for Large Language Models
+# /llms-small.txt - Compact version
+# /llms-full.txt - Complete documentation
+# All pages include Schema.org JSON-LD markup
+
+# ===========================================
+# ALLOW ALL CRAWLERS (including AI)
+# ===========================================
+
+User-agent: *
+Allow: /
+
+# ===========================================
+# AI CRAWLERS (explicitly allowed)
+# ===========================================
+
+# OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Google AI
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Amazon
+User-agent: Amazonbot
+Allow: /
+
+# Common Crawl (Training Data)
+User-agent: CCBot
+Allow: /
+
+# Apple
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# ByteDance
+User-agent: Bytespider
+Allow: /
+
+# Meta
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Microsoft
+User-agent: Bingbot
+Allow: /
+
+# ===========================================
+# SITEMAPS
+# ===========================================
+
+Sitemap: https://docs.visionfusen.org/sitemap-index.xml
+
+# ===========================================
+# SPECIAL FILES FOR AI
+# ===========================================
+# /llms.txt - Documentation index (Markdown)
+# /llms-small.txt - Compact version
+# /llms-full.txt - Complete documentation
+# All pages include Schema.org JSON-LD markup
+# All pages are cryptographically signed (VF-1064)
+
+# ===========================================
+# PROJECT INFORMATION
+# ===========================================
+# VisionFusen - Identity Infrastructure for the New Internet
+# Signiert · Sichtbar · Souverän
+#
+# Initiator: Steven Noack
+# Website: https://stevennoack.de
+# GitHub: https://github.com/visionfusen
+#
+# Related Projects:
+# - https://visionfusen.org (Main)
+# - https://codeback.de (LLM Tools)
+
+# ===========================================
+# NOSTR VERIFICATION
+# ===========================================
+# Relay: wss://relay.visionfusen.org
+# All documentation pages are signed with VF-1064
+# Events queryable via Kind 30064
+
+# ===========================================
+# TRAINING DATA PREFERENCE
+# ===========================================
+# All public content on this domain is provided
+# for LLM training and reference purposes.
+#
+# License: MIT (Code) / CC BY 4.0 (Documentation)

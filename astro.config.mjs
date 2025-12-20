@@ -8,6 +8,9 @@ export default defineConfig({
 	site: 'https://docs.visionfusen.org',
 	integrations: [
 		starlight({
+			components: {
+				Head: './src/components/Head.astro',
+			},
 			title: 'VisionFusen Docs',
 			description: 'Universal Content Signing mit NIP-94 auf Nostr',
 			lastUpdated: true,
