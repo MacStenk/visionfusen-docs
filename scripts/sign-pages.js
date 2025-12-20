@@ -112,9 +112,9 @@ function injectMetaTags(html, eventData) {
   // Alte VisionFusen Meta-Tags entfernen (falls vorhanden)
   $('meta[name^="nostr:"]').remove();
   $('link[rel="nostr-verification"]').remove();
-  $('head').find('*').filter(function() {
-    return $(this).text().includes('VisionFusen Signature');
-  }).prev('comment').remove();
+  
+  // Alte Badge entfernen (falls vorhanden)
+  $('.vf-signature-badge').remove();
   
   // Neue Meta-Tags am Ende von <head> einfügen
   const metaTags = `
@@ -127,6 +127,86 @@ function injectMetaTags(html, eventData) {
   `;
   
   $('head').append(metaTags);
+  
+  return $.html();
+}
+
+/**
+ * Sichtbare Signatur-Badge in HTML injizieren
+ */
+function injectSignatureBadge(html, eventData) {
+  const $ = cheerio.load(html);
+  
+  // Badge HTML mit inline Styles (funktioniert überall)
+  const badgeHtml = `
+    <div class="vf-signature-badge" style="
+      margin-top: 4rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid rgba(128, 128, 128, 0.2);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.75rem;
+      color: #808080;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    ">
+      <a href="https://visionfusen.org/verify/${eventData.id}" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         title="Signatur verifizieren"
+         style="
+           display: inline-flex;
+           align-items: center;
+           gap: 0.35rem;
+           color: #16a34a;
+           text-decoration: none;
+           transition: opacity 0.2s;
+         "
+         onmouseover="this.style.opacity='0.8'"
+         onmouseout="this.style.opacity='1'"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        Signiert
+      </a>
+      <span style="color: #505050;">·</span>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #606060;">
+        ${eventData.id.slice(0, 8)}...
+      </span>
+      <span style="color: #505050;">·</span>
+      <span style="color: #606060;">
+        ${new Date(eventData.signedAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+      </span>
+    </div>
+  `;
+  
+  // Badge am Ende des Content-Bereichs einfügen
+  // Starlight-spezifisch: nach dem letzten footer in .content-panel
+  // Oder nach .sl-markdown-content
+  const contentPanel = $('.content-panel');
+  const markdownContent = $('.sl-markdown-content');
+  const starlightFooter = $('footer.astro-3yyafb3n'); // Starlight "Zuletzt aktualisiert"
+  const mainEl = $('main');
+  const articleEl = $('article');
+  
+  if (starlightFooter.length) {
+    // Nach dem Starlight-Footer einfügen (aber noch innerhalb content-panel)
+    starlightFooter.after(badgeHtml);
+  } else if (markdownContent.length) {
+    markdownContent.after(badgeHtml);
+  } else if (contentPanel.length) {
+    contentPanel.append(badgeHtml);
+  } else if (mainEl.length) {
+    mainEl.append(badgeHtml);
+  } else if (articleEl.length) {
+    articleEl.append(badgeHtml);
+  } else {
+    // Fallback: vor </body>
+    $('body').append(badgeHtml);
+  }
   
   return $.html();
 }
@@ -458,12 +538,17 @@ async function signPages() {
       }
       
       // Meta-Tags injizieren (mit cheerio - robust!)
-      const updatedHtml = injectMetaTags(html, {
+      const eventDataForInjection = {
         id: signedEvent.id,
         pubkey: signedEvent.pubkey,
         hash: hash,
         signedAt: new Date().toISOString(),
-      });
+      };
+      
+      let updatedHtml = injectMetaTags(html, eventDataForInjection);
+      
+      // Sichtbare Badge einfügen
+      updatedHtml = injectSignatureBadge(updatedHtml, eventDataForInjection);
       
       // HTML speichern
       writeFileSync(filePath, updatedHtml);
