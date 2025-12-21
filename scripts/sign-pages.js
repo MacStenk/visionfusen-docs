@@ -519,6 +519,8 @@ async function signPages() {
           ['snapshot', new Date().toISOString()],
           ['signed_by', 'VisionFusen'],
           ['signed_by_url', 'https://visionfusen.org'],
+          ['license', 'CC BY 4.0'],
+          ['license_url', 'https://creativecommons.org/licenses/by/4.0/'],
         ],
         created_at: Math.floor(Date.now() / 1000),
       };
