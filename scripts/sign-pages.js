@@ -177,6 +177,15 @@ function injectSignatureBadge(html, eventData) {
         ${eventData.id.slice(0, 8)}...
       </span>
       <span style="color: #505050;">·</span>
+      <a href="https://creativecommons.org/licenses/by/4.0/" 
+         target="_blank" 
+         rel="noopener noreferrer license"
+         title="Creative Commons Attribution 4.0"
+         style="color: #606060; text-decoration: none;"
+         onmouseover="this.style.textDecoration='underline'"
+         onmouseout="this.style.textDecoration='none'"
+      >CC BY 4.0</a>
+      <span style="color: #505050;">·</span>
       <span style="color: #606060;">
         ${new Date(eventData.signedAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
       </span>
